@@ -1,0 +1,16 @@
+# Feedback server for the design report (review/server.py). Apply ONCE:  myco serve apply review/mount.yaml
+# Re-applying gives the mount a NEW url; afterwards rebuild the report (python cad/report.py) so the page
+# points at it. To pick up server code changes, just stop the process; the next request starts it again.
+name: <project>-feedback
+process:
+  command: .venv/bin/python review/server.py        # the whole command line here: an args: list is dropped
+  workdir: /path/to/<project>
+  port: 8790
+  env:
+    PORT: "8790"
+    FEEDBACK_NOTIFY_SESSION: <your-myco-session-id>  # gets "Design feedback round N came in ..." ($MYCOLAB_SESSION_ID)
+    FEEDBACK_CAD_FRAME: "CAD frame for 3D notes: X right, Y rearward, Z up, mm; origin at <...>"
+  warmup_path: /api/health
+  wake_on_request: true
+  idle_timeout_sec: 1800
+access: link

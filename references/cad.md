@@ -67,6 +67,19 @@
 - `build_part()` can take a minute: pass the built part into checks instead of rebuilding per check, run long
   scripts with a timeout, and keep stdout (results) apart from stderr (warnings).
 
+## Sizes you can't trust: check them against a photo
+
+Vendor size drawings are often not to scale, and their labels can be plain wrong (a "60 mm deep" dock was ~105).
+Before designing to a published size, check it against everything else you have: does it fit in the stated box
+size, and is it consistent with the user's photo? To measure from a photo, pick the four corners of one flat
+rectangular face and fit a pinhole camera with a phone's focal length (24-26 mm equivalent: f = image diagonal
+in px x 24-26 / 43.3) using `scipy.optimize.least_squares`. That gives the face's aspect ratio reliably (residual
+of a few px). Then set the scale from an object of known size in the same photo (the host). Points on rounded
+or occluded edges give fits that are 30+ px off; leave them out.
+
+When a size stays uncertain, design so it doesn't matter: a tray longer than any estimate with an open end, so
+only one dimension sets a stop. Name that one parameter on the report as the thing to confirm.
+
 ## Exports
 
 - Per printed part: STEP (for CAD users), STL (`tolerance=0.02, angularTolerance=0.1`) and 3MF.

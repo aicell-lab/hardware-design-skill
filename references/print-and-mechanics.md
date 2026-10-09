@@ -100,3 +100,24 @@ Printed PETG: E ~ 1.8 GPa (vendor range 1.5-2.8), friction on anodised aluminium
   radii. Record the result and the image in `research/` with the scale you used.
 - Reviews and teardowns fill gaps (cased phone thickness, removable pads, rounded bottoms).
 - Mark every assumed number "assumed: check on the first print" and list it in the report's "to confirm".
+
+## Cables you have to store (stiff leads)
+
+- A stiff lead wants bends of R 25 mm or more. A U-turn in a vertical plane needs 2R (50 mm) of height. If that
+  height isn't there, climb sideways instead: turn 90 degrees in plan, then rise gently along the run.
+- Store slack as ONE big loop round the edge of a shallow layer (a lead's diameter plus a few mm). A stiff loop
+  presses outward against the fences and stays put without clips, and the middle stays open for air.
+- Model the lead as a swept tube with a polyline and filleted corners (`geom.sweep_tube`). Each segment must be at
+  least the sum of its neighbours' tangent lengths (R tan(angle/2)), or the sweep fails with "null magnitude" or
+  "MakeSolid". A small grid search over one or two waypoints finds the most compact route that still sweeps.
+- A straight plug into a rear-facing port always leaves a tail of plug length plus R behind the box. Say so, and
+  name the bought fix (a 90-degree plug) rather than hiding it.
+
+## Merging a finished part into a new one
+
+When a new part should absorb an earlier, proven one (here a clip-on mount and a base became one chassis):
+- Vendor the old model file unchanged into the new project.
+- Build the new part as a union of the old part's pieces, minus its attachment features, plus the new ones.
+- Keep the old part's print pose, and design every new feature to run along the build direction.
+- Then check what that pose does to the new geometry. A plate that ends mid-air when printed must be extended down
+  to the bed.

@@ -96,6 +96,7 @@ When the user says "looks good, I'll print it", reply with a print and fit check
 | clips on a device | Use the real edge height (measure or derive), preload small (0.5 mm) or the walls splay visibly, catch angle sets pull-down vs pop-off. If the user wants it locked, reach a tongue well under the edge and fit by spreading the walls. |
 | stability | When something leans or overhangs, compute where the CG sits vs the tipping edge and the press force that tips it (a 40 deg phone's CG sat right over the host's rear edge: 2 N tipped the Rev F mount). |
 | cables | Model the largest standard plug envelope (USB-C overmold 12.35 x 6.5 x 16 mm) and its bend; leave holes (closed, rounded) not gaps if the user asks; storage pegs long enough for 4-5 turns. |
+| wiring | One wire per terminal; multi-drop nets on a junction board whose strips run across the incoming wires; bundles on lanes in printed channels with labels; a connector where a part comes off; every wire a 3D tube checked against parts AND other wires. `references/wiring-and-harness.md`. |
 | material | PETG for anything near warm electronics (PLA softens ~55 C); 5 walls so hooks, hinges and ribs are solid perimeters. |
 
 Details and formulas: `references/print-and-mechanics.md`.
@@ -111,7 +112,7 @@ Details and formulas: `references/print-and-mechanics.md`.
 
 ## Files in this skill
 
-- `references/`: cad, print-and-mechanics, checks, renders-and-viewer, web-report, feedback-loop, case study.
+- `references/`: cad, print-and-mechanics, checks, renders-and-viewer, web-report, feedback-loop, wiring-and-harness, case study.
 - `templates/feedback/`: the review layer (server, widget, explode control, mount spec, smoke test). Copy to
   `review/`, then set the names, the port and the session to notify.
 - `templates/cad/`: `geom.py` (frames, rounded profiles, sweeps, booleans), `render_kit.py` (offscreen shots,

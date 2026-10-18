@@ -228,11 +228,11 @@
   }
 
   // ------------------------------------------------------------------ 3D pins
-  // Pins live in the assembled pose (that is what the CAD coordinates mean). While the view is exploded
+  // Pins live in the assembled pose (that is what the CAD coordinates mean). While the view is spread-out
   // (viewer.js), a pin is shown moved with its part, and a new pin has its part's offset taken off.
   const mpos = (a) => a.map((q) => `${q}m`).join(" ");
   const shift = (pos, object, sgn = 1) => {
-    const ex = window.EXPLODE || { amount: 0, offsets: {} };
+    const ex = window.SPREAD || { amount: 0, offsets: {} };
     const o = ex.offsets[object] || [0, 0, 0];
     return pos.map((p, k) => p + o[k] * ex.amount * sgn);
   };
@@ -323,7 +323,7 @@
     return b;
   }
 
-  mv?.addEventListener("fb-explode", () => mv.querySelectorAll(".fb-pin").forEach((b) => {
+  mv?.addEventListener("fb-spread", () => mv.querySelectorAll(".fb-pin").forEach((b) => {
     if (b.fbItem) mv.updateHotspot({ name: b.slot, position: mpos(shift(b.fbItem.pos, b.fbItem.object)) });
   }));
 

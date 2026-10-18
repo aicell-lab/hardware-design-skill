@@ -23,17 +23,17 @@ One static page per project, regenerated every revision, served at a stable URL.
 1. Header bar (project, rev, date), kicker, h1 (one sentence: what it is), lede, pills (parts count, no
    screws/glue, host not modified, material/no supports, prototype status).
 2. Hero: the oblique render next to `<model-viewer src="files/assembly.glb" camera-controls auto-rotate>`
-   with the Explode button and the "📍 Comment on 3D" button; a note on how to use both and the feedback
+   with the Spread button and the "📍 Comment on 3D" button; a note on how to use both and the feedback
    panel.
 3. Downloads per part (3MF primary, STL, STEP) and the checks JSON.
 4. **Your feedback -> Rev X**: table of every note (thumbnail, #n, round, the note, the design now).
 5. How it works: a 3-column grid of captioned figures (bold lead, then one or two sentences): the overall
-   look, labelled sections of the mechanisms, use cases, the exploded still, the print pose of small parts.
+   look, labelled sections of the mechanisms, use cases, the spread-out still, the print pose of small parts.
 6. Two columns: The parts (dimensions, mass, key numbers) / Designed from published data (each input and
    its source).
 7. Two columns: Print + Assemble (+ how to remove) / Digital checks table + "To confirm on the first print".
 8. More views; footer (tools, units, source in the git repo).
-9. Scripts: `window.FEEDBACK_API`, `window.DESIGN_REV`, `window.EXPLODE = {amount, offsets}`, then
+9. Scripts: `window.FEEDBACK_API`, `window.DESIGN_REV`, `window.SPREAD = {amount, offsets}`, then
    `viewer.js` and `feedback.js` (defer).
 
 ## Serving and checking

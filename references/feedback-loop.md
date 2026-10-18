@@ -51,7 +51,7 @@ Templates: `templates/feedback/` (copy to `review/`). Stdlib + Pillow server, va
 
 - `window.DESIGN_REV` stamps new notes; the widget hides sent pins and marks from older revisions, so the
   page starts clean each revision.
-- Pins live in the assembled pose; with the explode view they move with their part (see
+- Pins live in the assembled pose; with the spread view they move with their part (see
   `renders-and-viewer.md`).
 
 ## Testing the widget (never against the live server)

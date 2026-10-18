@@ -1,9 +1,9 @@
 """Render kit: offscreen PNGs (PyVista/VTK), labelled sections, contact sheets, and the web viewer's GLB with an
-'explode' animation. Generic; the project's render.py builds its scene and calls these.
+'spread' animation. Generic; the project's render.py builds its scene and calls these.
 
     objs = [("printed part", part_wp, "#2b2d31", 0.7), ("host", host_wp, "#c8b48b", 0.45), ...]
     shot(scene(objs), OUT / "oblique.png", [(-90, -330, 300), (75, 133, 56), (0, 0, 1)])
-    export_glb(objs, OUT / "assembly.glb", explode={"screen frame": [0, -35, 42], "host": [0, 0, -60]})
+    export_glb(objs, OUT / "assembly.glb", spread={"screen frame": [0, -35, 42], "host": [0, 0, -60]})
 """
 from __future__ import annotations
 
@@ -96,10 +96,10 @@ def contact_sheet(paths, out, cols=4, w=600):
     return out
 
 
-def export_glb(objs, path, explode=None):
+def export_glb(objs, path, spread=None):
     """Coloured glTF for model-viewer. One node + one material per object, both named after it (the feedback
-    pins record the material name). mm -> m, Z-up -> Y-up. explode = {name: [dx, dy, dz] mm}: adds the
-    'explode' animation (see add_explode)."""
+    pins record the material name). mm -> m, Z-up -> Y-up. spread = {name: [dx, dy, dz] mm}: adds the
+    'spread' animation (see add_spread)."""
     import trimesh
     from trimesh.transformations import rotation_matrix
     from trimesh.visual.material import PBRMaterial
@@ -116,13 +116,13 @@ def export_glb(objs, path, explode=None):
         sc.add_geometry(m, node_name=name, geom_name=name)
     sc.apply_transform(rotation_matrix(-np.pi / 2, [1, 0, 0]) @ np.diag([1e-3] * 3 + [1]))
     glb = sc.export(file_type="glb", include_normals=True)
-    Path(path).write_bytes(add_explode(glb, explode) if explode else glb)
+    Path(path).write_bytes(add_spread(glb, spread) if spread else glb)
     return Path(path)
 
 
-def add_explode(glb, offsets):
+def add_spread(glb, offsets):
     """Hang every part under one 'assembly' node carrying the mm -> m, Z-up -> Y-up matrix (animated nodes must
-    not have a matrix), and add an 'explode' animation (0 -> 1 s, LINEAR) moving each listed part by its offset
+    not have a matrix), and add an 'spread' animation (0 -> 1 s, LINEAR) moving each listed part by its offset
     (mm, in the assembly's frame). Scrub it with model-viewer's currentTime (templates/feedback/viewer.js)."""
     jl = struct.unpack("<I", glb[12:16])[0]
     j = json.loads(glb[20:20 + jl])
@@ -152,7 +152,7 @@ def add_explode(glb, offsets):
             samplers.append({"input": times, "output": accessor(struct.pack("<6f", 0, 0, 0, *d), 2, "VEC3"),
                              "interpolation": "LINEAR"})
             channels.append({"sampler": len(samplers) - 1, "target": {"node": i, "path": "translation"}})
-    j["animations"] = [{"name": "explode", "samplers": samplers, "channels": channels}]
+    j["animations"] = [{"name": "spread", "samplers": samplers, "channels": channels}]
     binary.extend(b"\0" * (-len(binary) % 4))
     j["buffers"][0]["byteLength"] = len(binary)
     js = json.dumps(j, separators=(",", ":")).encode()
@@ -161,6 +161,6 @@ def add_explode(glb, offsets):
             + struct.pack("<I4s", len(binary), b"BIN\0") + bytes(binary))
 
 
-def explode_for_page(offsets_mm):
-    """The same offsets in glTF metres (Y-up), for window.EXPLODE.offsets on the report page."""
+def spread_for_page(offsets_mm):
+    """The same offsets in glTF metres (Y-up), for window.SPREAD.offsets on the report page."""
     return {k: [round(x / 1000, 5), round(z / 1000, 5), round(-y / 1000, 5)] for k, (x, y, z) in offsets_mm.items()}

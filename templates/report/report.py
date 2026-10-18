@@ -1,8 +1,8 @@
 """Build the web design report (site/) from the current model, checks and renders. Generic skeleton: fill in
-PROJECT, IMAGES, NOTES and the page text; the structure, the feedback table, the 3D viewer with Explode and the
+PROJECT, IMAGES, NOTES and the page text; the structure, the feedback table, the 3D viewer with Spread and the
 feedback layer are ready.
 
-Expects: cad/<model>.py importable as M (with explode_offsets()), exports/checks.json, renders/*.png,
+Expects: cad/<model>.py importable as M (with spread_offsets()), exports/checks.json, renders/*.png,
 renders/assembly.glb, review/{feedback.js, feedback.css, viewer.js}, feedback/feedback.json (once notes exist).
 Run:  python cad/report.py   -> site/index.html
 """
@@ -26,7 +26,7 @@ PROJECT = "Project name"                  # header bar + <title>
 REV = "Rev A"
 FEEDBACK_MOUNT = "project-feedback"       # myco process mount running review/server.py (review/mount.yaml)
 PARTS = ("part", "frame")                 # exports/<part>.{3mf,stl,step}
-IMAGES = ("oblique_front", "section_a", "exploded", "part_alone", "side", "rear")
+IMAGES = ("oblique_front", "section_a", "spread-out", "part_alone", "side", "rear")
 
 # Every feedback note and what the design does NOW: (round, n, "the note in plain English", "answer {values}").
 # Rewrite an answer when a later round supersedes it ("Superseded by #14: ...").
@@ -65,8 +65,8 @@ def build():
     ck = json.loads((ROOT / "exports" / "checks.json").read_text())
     v = dict(project=PROJECT, rev=REV, today=date.today().isoformat(), fb_api=feedback_api(), fbv=h.hexdigest()[:10],
              mass=round(ck["part_volume_cm3"] * 1.27 * 0.85),       # PETG, ~85% fill
-             explode=json.dumps({k: [round(x / 1000, 5), round(z / 1000, 5), round(-y / 1000, 5)]   # glTF m, Y up
-                                 for k, (x, y, z) in M.explode_offsets().items()}))
+             spread=json.dumps({k: [round(x / 1000, 5), round(z / 1000, 5), round(-y / 1000, 5)]   # glTF m, Y up
+                                 for k, (x, y, z) in M.spread_offsets().items()}))
     # ... add every number the page shows, from ck (checks.json) and M (parameters), formatted f"{x:g}"
 
     snaps = {}
@@ -114,11 +114,11 @@ TEMPLATE = r"""<!doctype html>
   .hero {{ display:grid; grid-template-columns:3fr 2fr; gap:14px; margin-top:20px; }}
   .hero img, model-viewer {{ width:100%; border-radius:12px; border:1px solid var(--line); background:#f3f2ee; }}
   model-viewer {{ height:100%; min-height:330px; }}
-  model-viewer .mv-explode {{ position:absolute; left:10px; bottom:10px; padding:7px 12px; border:1px solid rgba(0,0,0,.08);
+  model-viewer .mv-spread {{ position:absolute; left:10px; bottom:10px; padding:7px 12px; border:1px solid rgba(0,0,0,.08);
     border-radius:18px; background:rgba(255,255,255,.94); color:#1d1f22; font:600 12.5px/1 inherit; cursor:pointer;
     box-shadow:0 2px 8px rgba(0,0,0,.12); }}
-  model-viewer .mv-explode.on {{ background:#1d1f22; color:#fff; }}
-  model-viewer .mv-explode[hidden] {{ display:none; }}
+  model-viewer .mv-spread.on {{ background:#1d1f22; color:#fff; }}
+  model-viewer .mv-spread[hidden] {{ display:none; }}
   .grid3 {{ display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }}
   .grid3 img {{ width:100%; border-radius:10px; border:1px solid var(--line); background:#f3f2ee; }}
   figure {{ margin:0; }} figcaption {{ font-size:12px; color:var(--mute); margin-top:5px; }}
@@ -153,7 +153,7 @@ TEMPLATE = r"""<!doctype html>
     <model-viewer src="files/assembly.glb" alt="Interactive 3D view" camera-controls auto-rotate rotation-per-second="18deg"
       shadow-intensity="0.7" exposure="1.05" camera-orbit="-35deg 62deg auto" interaction-prompt="none"></model-viewer>
   </div>
-  <p class="note">Right: drag to rotate, scroll to zoom; <b>Explode</b> lifts the parts apart the way they go together.
+  <p class="note">Right: drag to rotate, scroll to zoom; <b>Spread</b> lifts the parts apart the way they go together.
   <b>Feedback:</b> <b>📍 Comment on 3D</b> pins a note on the model, click any picture to mark it up, or open <b>💬 Feedback</b>
   (bottom right) to add photos of your hardware and send everything back for the next revision.</p>
 
@@ -169,7 +169,7 @@ TEMPLATE = r"""<!doctype html>
   <h2>How it works</h2>
   <div class="grid3">
     <figure><img src="img/section_a.png" alt="Section"><figcaption><b>Bold lead.</b> One or two sentences on what the labelled section shows.</figcaption></figure>
-    <figure><img src="img/exploded.png" alt="Exploded"><figcaption><b>How it goes together.</b> Each part, in assembly order.</figcaption></figure>
+    <figure><img src="img/spread-out.png" alt="Spread-out"><figcaption><b>How it goes together.</b> Each part, in assembly order.</figcaption></figure>
     <figure><img src="img/part_alone.png" alt="The part"><figcaption><b>The printed part.</b> As printed, no supports.</figcaption></figure>
   </div>
 
@@ -185,7 +185,7 @@ TEMPLATE = r"""<!doctype html>
   </div>
 </main>
 <footer>Built with CadQuery (parametric source), PyVista renders. Units mm.</footer>
-<script>window.FEEDBACK_API = "{fb_api}"; window.DESIGN_REV = "{rev}"; window.EXPLODE = {{ "amount": 0, "offsets": {explode} }};</script>
+<script>window.FEEDBACK_API = "{fb_api}"; window.DESIGN_REV = "{rev}"; window.SPREAD = {{ "amount": 0, "offsets": {spread} }};</script>
 <script src="viewer.js?v={fbv}" defer></script>
 <script src="feedback.js?v={fbv}" defer></script>
 </body>

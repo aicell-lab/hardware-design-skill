@@ -5,7 +5,7 @@ A Claude Code skill for designing 3D-printable parts
 
 The agent models the part as parametric CadQuery code, proves it with digital checks (collisions, insertion
 paths, print-pose overhangs, clip, lever and tip-over maths) and renders, and publishes a design report: a web
-page with a 3D viewer (assembled and **exploded**), labelled cut sections, downloads (3MF / STL / STEP) and a
+page with a 3D viewer (assembled and **spread-out**), labelled cut sections, downloads (3MF / STL / STEP) and a
 **feedback layer**. On that page the reviewer pins notes on the 3D model, marks up pictures, uploads photos of
 the real print and presses *Send*. The agent gets a "feedback round N" message and turns it into the next
 revision, answering every note by number.
@@ -30,13 +30,13 @@ Claude Code picks it up as the `hardware-design` skill (ask for a printable part
 | `references/cad.md` | CadQuery/OCC practice: frames, 2D profiles, fillets that break solids, selectors, exports |
 | `references/print-and-mechanics.md` | print orientation and overhangs, clearances, rigid seats and datums, flexure buttons and lost motion, snap-fit and tip-over formulas, connectors |
 | `references/checks.md` | the digital checks and how to report them |
-| `references/renders-and-viewer.md` | offscreen renders, labelled sections, GLB for the web, the explode animation |
+| `references/renders-and-viewer.md` | offscreen renders, labelled sections, GLB for the web, the spread animation |
 | `references/web-report.md` | the report generator and the page outline |
 | `references/feedback-loop.md` | pins, mark-ups, photos, rounds; the feedback server on myco; testing with Playwright |
 | `references/case-study-dgx-spark-mount.md` | revisions and lessons from the DGX Spark mount |
 | `templates/cad/` | `geom.py`, `render_kit.py`, `checks_kit.py` |
 | `templates/report/report.py` | report generator skeleton |
-| `templates/feedback/` | feedback server, widget, explode control, myco mount spec, browser smoke test |
+| `templates/feedback/` | feedback server, widget, spread control, myco mount spec, browser smoke test |
 
 ## Requirements
 

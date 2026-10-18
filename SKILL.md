@@ -1,6 +1,6 @@
 ---
 name: hardware-design
-description: Design a 3D-printable part (mount, bracket, holder, enclosure) as parametric CadQuery code, prove it with digital checks and renders, publish a web design report with a 3D viewer (assembled + exploded) and a feedback layer where the user pins notes on the model, marks up pictures and uploads photos of real prints, then iterate revision by revision from their feedback rounds. Use when asked to design physical or 3D-printed hardware, or when a "Design feedback round N came in from the review page" message arrives.
+description: Design a 3D-printable part (mount, bracket, holder, enclosure) as parametric CadQuery code, prove it with digital checks and renders, publish a web design report with a 3D viewer (assembled + spread-out) and a feedback layer where the user pins notes on the model, marks up pictures and uploads photos of real prints, then iterate revision by revision from their feedback rounds. Use when asked to design physical or 3D-printed hardware, or when a "Design feedback round N came in from the review page" message arrives.
 ---
 
 # Printed-hardware design loop
@@ -21,7 +21,7 @@ Rev A to H, 21 notes over 7 rounds, two printed parts) is in `references/case-st
   check you did not run.
 - **Notes arrive in any language,** often dictated Chinese. Translate faithfully, keep their intent, and
   restate it briefly in the report.
-- **Messages can land mid-turn** (e.g. "also add an explode view"). Fold them into the same turn.
+- **Messages can land mid-turn** (e.g. "also add a spread view"). Fold them into the same turn.
 - **Honest about uncertainty.** Name what is assumed, what to check on the print, and the one parameter to
   tune if it is off (e.g. `BTN_GAP`; reprint only the small part).
 
@@ -31,7 +31,7 @@ Rev A to H, 21 notes over 7 rounds, two printed parts) is in `references/case-st
 cad/<part>.py   parameters (with sources) -> frames -> geometry -> exports/ (STEP, STL, 3MF per part)
 cad/geom.py     shared helpers                        (templates/cad/geom.py)
 cad/checks.py   digital checks -> exports/checks.json (templates/cad/checks_kit.py)
-cad/render.py   PNG views, labelled sections, assembly.glb with an explode animation (templates/cad/render_kit.py)
+cad/render.py   PNG views, labelled sections, assembly.glb with a spread animation (templates/cad/render_kit.py)
 cad/report.py   site/index.html from checks + renders + the NOTES table   (templates/report/report.py)
 review/         feedback layer: server.py, feedback.js/.css, viewer.js, mount.yaml, smoke_test.py (templates/feedback)
 feedback/       FEEDBACK.md, feedback.json, media/   (written by the feedback server)
@@ -49,10 +49,10 @@ cp $SKILL_DIR/templates/cad/*.py cad/ && cp $SKILL_DIR/templates/report/report.p
 cp $SKILL_DIR/templates/feedback/* review/      # then edit review/mount.yaml (name, workdir, session, frame)
 ```
 
-Write `cad/<part>.py` (with `build_part()` and `explode_offsets()`), a short `checks.py` and `render.py` on top
+Write `cad/<part>.py` (with `build_part()` and `spread_offsets()`), a short `checks.py` and `render.py` on top
 of the kits, then `myco serve <name> ./site` once and `myco serve apply review/mount.yaml` once. A private git
 repo; one commit per revision. The kits were tested end to end on a toy bracket (model -> checks -> renders ->
-GLB with explode -> report -> Explode in Chrome).
+GLB with spread -> report -> Spread in Chrome).
 
 ## The loop (one revision)
 
@@ -65,7 +65,7 @@ GLB with explode -> report -> Explode in Chrome).
    which are reported on their own. Add a check for whatever the note was about (tip-over, a button's
    stroke, a phone in the lane...).
 5. **Render** (`references/renders-and-viewer.md`) and look at every image: a contact sheet, close-ups of the
-   changed area, labelled cut sections for mechanisms, the assembled and exploded 3D view.
+   changed area, labelled cut sections for mechanisms, the assembled and spread-out 3D view.
 6. **Report** (`references/web-report.md`): bump `REV`; one NOTES row per note (round, number, the note,
    what the design does now); rewrite older answers the change supersedes; captions, checks table, "to
    confirm on the print". Screenshot the live page with Playwright to check the layout.
@@ -104,7 +104,7 @@ Details and formulas: `references/print-and-mechanics.md`.
 ## Gotchas index
 
 - CadQuery/OCC (fillets that kill solids, pending wires, selectors, coplanar booleans): `references/cad.md`.
-- GLB for the web (sRGB to linear, names = pin labels, explode animation that loops back to 0 at its end,
+- GLB for the web (sRGB to linear, names = pin labels, spread animation that loops back to 0 at its end,
   play before pause): `references/renders-and-viewer.md`.
 - myco (static vs process mounts, re-apply = new URL, `command` not `args`, kill by port): `references/feedback-loop.md`.
 - Testing the page: Playwright with the system Chrome (`executable_path="/usr/bin/google-chrome"`, swiftshader),
@@ -113,10 +113,10 @@ Details and formulas: `references/print-and-mechanics.md`.
 ## Files in this skill
 
 - `references/`: cad, print-and-mechanics, checks, renders-and-viewer, web-report, feedback-loop, wiring-and-harness, case study.
-- `templates/feedback/`: the review layer (server, widget, explode control, mount spec, smoke test). Copy to
+- `templates/feedback/`: the review layer (server, widget, spread control, mount spec, smoke test). Copy to
   `review/`, then set the names, the port and the session to notify.
 - `templates/cad/`: `geom.py` (frames, rounded profiles, sweeps, booleans), `render_kit.py` (offscreen shots,
-  sections, labels, contact sheets, GLB with explode), `checks_kit.py` (interference, overhangs in any print
+  sections, labels, contact sheets, GLB with spread), `checks_kit.py` (interference, overhangs in any print
   pose, cantilever, clip, tip-over and slide maths).
-- `templates/report/report.py`: the report generator (page outline, NOTES table, 3D viewer with Explode,
+- `templates/report/report.py`: the report generator (page outline, NOTES table, 3D viewer with Spread,
   feedback layer hooks), ready to fill in.

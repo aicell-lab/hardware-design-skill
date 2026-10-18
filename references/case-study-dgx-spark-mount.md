@@ -18,7 +18,7 @@ the right, a lane for a phone on the left, the USB-C cable hidden inside. 8 revi
 | E | round 4 | screen moved to the right end ("the cable needs about half the screen's width"); one flat panel and one straight full-width lane: "extremely simple and minimalist, good-looking with no phone" |
 | F | round 5 | lane sized for an iPhone in a silicone case, low edge, screen moved up the panel, a springy "click" edge |
 | G | round 6, **after the first print** | rigid screen (no springs), glass 1.5 mm proud, crush ribs + datums; button play removed; walls sized to the measured 46 mm edge; flatter catch; click edge removed; charging gap -> hole; longer pegs |
-| H | round 7 + "add an explode view" | tongues reaching 8 mm under the Spark; explode animation in the web viewer, pins follow parts |
+| H | round 7 + "add a spread view" | tongues reaching 8 mm under the Spark; spread animation in the web viewer, pins follow parts |
 
 ## Lessons
 
